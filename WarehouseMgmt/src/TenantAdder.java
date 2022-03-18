@@ -36,8 +36,8 @@ public class TenantAdder extends JFrame {
 		panel.setLayout(grid);
 
 		// Initializing fields and descriptions
-		fields = new JTextField[7];
-		descriptions = new String[7];
+		fields = new JTextField[9];
+		descriptions = new String[9];
 
 		fields[0] = new JTextField();
 		fields[0].setPreferredSize(new Dimension(140, 30));
@@ -71,7 +71,7 @@ public class TenantAdder extends JFrame {
 		
 		fields[5] = new JTextField();
 		fields[5].setPreferredSize(new Dimension(140, 30));
-		descriptions[5] = "Current Balance";
+		descriptions[5] = "Phone";
 		fields[5].addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent ke) {
 				if ((ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') || ke.getKeyChar() == '\u0008') {
@@ -82,10 +82,9 @@ public class TenantAdder extends JFrame {
 			}
 		});
 		
-		
 		fields[6] = new JTextField();
 		fields[6].setPreferredSize(new Dimension(140, 30));
-		descriptions[6] = "Security Deposit";
+		descriptions[6] = "Current Balance";
 		fields[6].addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent ke) {
 				if ((ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') || ke.getKeyChar() == '\u0008') {
@@ -95,6 +94,24 @@ public class TenantAdder extends JFrame {
 				}
 			}
 		});
+		
+		
+		fields[7] = new JTextField();
+		fields[7].setPreferredSize(new Dimension(140, 30));
+		descriptions[7] = "Security Deposit";
+		fields[7].addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent ke) {
+				if ((ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') || ke.getKeyChar() == '\u0008') {
+					fields[7].setEditable(true);
+				} else {
+					fields[7].setEditable(false);
+				}
+			}
+		});
+		
+		fields[8] = new JTextField();
+		fields[8].setPreferredSize(new Dimension(140, 30));
+		descriptions[8] = "Notes";
 
 		// Add components to panel
 		for (int i = 0; i < fields.length; i++) {
@@ -170,24 +187,28 @@ public class TenantAdder extends JFrame {
 		
 		// Adding buttons to panel
 		gbc.gridx = 0;
-		gbc.gridy = 7;
+		gbc.gridy = 9;
 		gbc.anchor = GridBagConstraints.WEST;
 		panel.add(add, gbc);
 		
 		gbc.gridx = 1;
-		gbc.gridy = 7;
+		gbc.gridy = 9;
 		gbc.anchor = GridBagConstraints.EAST;
 		panel.add(cancel, gbc);
 
 		add(panel);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setSize(400, 400);
+		setSize(400, 500);
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
 
 	public void add() {
-		SQLFunctions.insertTenant(fields[0].getText(), fields[1].getText(), fields[2].getText(), Integer.parseInt(fields[3].getText()), fields[4].getText(), Integer.parseInt(fields[5].getText()), Integer.parseInt(fields[6]. getText()));
+		SQLFunctions.insertTenant(fields[0].getText(), fields[1].getText(), 
+				fields[2].getText(), Integer.parseInt(fields[3].getText()), 
+				fields[4].getText(), Integer.parseInt(fields[5].getText()), 
+				Integer.parseInt(fields[6]. getText()), Integer.parseInt(fields[7]. getText()),
+				fields[8].getText());
 		setVisible(false);
 		dispose();
 	}

@@ -34,9 +34,9 @@ public class SQLFunctions {
 	}
 
 	public static int insertTenant(String name, String address, String citystate, int zipcode, String email,
-			int currBal, int sec) {
-		String sql = "INSERT INTO tenant_info(Name, address, citystate, zipcode, email, current_balance, security_deposit, monthly_rent) "
-				+ "VALUES(?,?,?,?,?,?,?,?)";
+			int phone, int currBal, int sec, String notes) {
+		String sql = "INSERT INTO tenant_info(Name, address, citystate, zipcode, email, phone, current_balance, security_deposit, monthly_rent, notes) "
+				+ "VALUES(?,?,?,?,?,?,?,?,?,?)";
 
 		ResultSet rs = null;
 		int tenant_id = 0;
@@ -49,9 +49,11 @@ public class SQLFunctions {
 			pstmt.setString(3, citystate);
 			pstmt.setInt(4, zipcode);
 			pstmt.setString(5, email);
-			pstmt.setInt(6, currBal);
-			pstmt.setInt(7, sec);
-			pstmt.setInt(8, 0);
+			pstmt.setInt(6, phone);
+			pstmt.setInt(7, currBal);
+			pstmt.setInt(8, sec);
+			pstmt.setInt(9, 0);
+			pstmt.setString(10, notes);
 
 			int rowAffected = pstmt.executeUpdate();
 
@@ -133,9 +135,9 @@ public class SQLFunctions {
 
 			while (rs.next()) {
 				String[] array = { rs.getString("tenant_id"), rs.getString("name"), rs.getString("address"),
-						rs.getString("citystate"), rs.getString("zipcode"), rs.getString("email"),
+						rs.getString("citystate"), rs.getString("zipcode"), rs.getString("email"), rs.getString("phone"),
 						rs.getString("Current_balance"), rs.getString("monthly_rent"),
-						rs.getString("Security_Deposit") };
+						rs.getString("Security_Deposit"), rs.getString("notes")};
 				conn.close();
 				return array;
 			}
@@ -543,12 +545,12 @@ public class SQLFunctions {
 
 	public static void editTenant(String[] info) {
 		String sql = "UPDATE tenant_info SET name = '" + info[1] + "', address = '" + info[2] + "', citystate = '"
-				+ info[3] + "', zipcode = " + info[4] + ", email = '" + info[5] + "', current_balance = " + info[6]
-				+ ", monthly_rent = " + info[7] + ", security_deposit = " + info[8] + " WHERE tenant_id = " + info[0]
+				+ info[3] + "', zipcode = " + info[4] + ", email = '" + info[5] + "', phone = " + info[6] + ", current_balance = " + info[7]
+				+ ", monthly_rent = " + info[8] + ", security_deposit = " + info[9] + ", notes = '" + info[10] + "' WHERE tenant_id = " + info[0]
 				+ ";";
 
 		int oldBalance = getBalance(Integer.valueOf(info[0]));
-		int newBalance = Integer.valueOf(info[6]);
+		int newBalance = Integer.valueOf(info[7]);
 
 		try (Connection conn = MySQLJDBCUtil.getConnection(); Statement stmt = conn.createStatement();) {
 			stmt.executeUpdate(sql);
