@@ -35,15 +35,18 @@ public class UnitSearch extends Search {
 		panel.setLayout(new GridBagLayout());
 
 		// creating first row of column labels
-		String[] cLabels = { "Number", "Type", "Price", "Size", "Tenant" };
+		String[] cLabels = { "Number", "Type", "Monthly Price ($)", "Size", "Tenant" };
 
 		for (int i = 0; i < cLabels.length; i++) {
 			JLabel label = new JLabel(cLabels[i], SwingConstants.CENTER);
 			label.setFont(new Font("Trebuchet MS", Font.BOLD, 14));
 			if (i == 0) {
 				label.setPreferredSize(new Dimension(60, 20));
-			} else {
-				label.setPreferredSize(new Dimension(80, 20));
+			} else if (i == 2) {
+				label.setPreferredSize(new Dimension(115, 20));
+			}
+			else {
+				label.setPreferredSize(new Dimension(60, 20));
 			}
 			gbc.gridx = i;
 			gbc.gridy = 0;
@@ -55,9 +58,15 @@ public class UnitSearch extends Search {
 		for (int i = 0; i < table.size(); i++) {
 			for (int j = 0; j < table.get(i).length; j++) {
 				JLabel label = new JLabel(table.get(i)[j], SwingConstants.CENTER);
+				
+				if (j == 4 && table.get(i)[j] != null) {
+					label = new JLabel(String.format("%1.10s", SQLFunctions.getTenantName(Integer.parseInt(table.get(i)[j]))), SwingConstants.CENTER);
+				}
+				
 				if (table.get(i)[j] == null) {
 					label = new JLabel("Empty", SwingConstants.CENTER);
 				}
+				
 				label.setFont(new Font("Trebuchet MS", Font.PLAIN, 14));
 				label.setOpaque(true);
 				label.setBackground(Color.white);

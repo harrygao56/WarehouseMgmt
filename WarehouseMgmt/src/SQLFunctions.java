@@ -21,9 +21,7 @@ public class SQLFunctions {
 			pstmt.setString(2, unitType);
 			pstmt.setInt(3, unitPrice);
 			pstmt.setString(4, unitSize);
-
-			int rowAffected = pstmt.executeUpdate();
-
+			pstmt.executeUpdate();
 			conn.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -34,9 +32,9 @@ public class SQLFunctions {
 	}
 
 	public static int insertTenant(String name, String address, String citystate, int zipcode, String email,
-			int currBal, int sec) {
-		String sql = "INSERT INTO tenant_info(Name, address, citystate, zipcode, email, current_balance, security_deposit, monthly_rent) "
-				+ "VALUES(?,?,?,?,?,?,?,?)";
+			long phone, int currBal, int sec, String notes) {
+		String sql = "INSERT INTO tenant_info(Name, address, citystate, zipcode, email, phone, current_balance, security_deposit, monthly_rent, notes) "
+				+ "VALUES(?,?,?,?,?,?,?,?,?,?)";
 
 		ResultSet rs = null;
 		int tenant_id = 0;
@@ -49,9 +47,11 @@ public class SQLFunctions {
 			pstmt.setString(3, citystate);
 			pstmt.setInt(4, zipcode);
 			pstmt.setString(5, email);
-			pstmt.setInt(6, currBal);
-			pstmt.setInt(7, sec);
-			pstmt.setInt(8, 0);
+			pstmt.setLong(6, phone);
+			pstmt.setInt(7, currBal);
+			pstmt.setInt(8, sec);
+			pstmt.setInt(9, 0);
+			pstmt.setString(10, notes);
 
 			int rowAffected = pstmt.executeUpdate();
 
@@ -133,9 +133,9 @@ public class SQLFunctions {
 
 			while (rs.next()) {
 				String[] array = { rs.getString("tenant_id"), rs.getString("name"), rs.getString("address"),
-						rs.getString("citystate"), rs.getString("zipcode"), rs.getString("email"),
+						rs.getString("citystate"), rs.getString("zipcode"), rs.getString("email"), rs.getString("phone"),
 						rs.getString("Current_balance"), rs.getString("monthly_rent"),
-						rs.getString("Security_Deposit") };
+						rs.getString("Security_Deposit"), rs.getString("notes")};
 				conn.close();
 				return array;
 			}
@@ -153,9 +153,61 @@ public class SQLFunctions {
 		}
 		return null;
 	}
+	
+	public static String getTenantName(int id) {
+		String sql = "SELECT name FROM tenant_info WHERE tenant_id = " + id;
+
+		try (Connection conn = MySQLJDBCUtil.getConnection(); Statement stmt = conn.createStatement();) {
+			ResultSet rs = stmt.executeQuery(sql);
+
+			while (rs.next()) {
+				String s = rs.getString("name");
+				conn.close();
+				return s;
+			}
+
+			try {
+				rs.close();
+				stmt.close();
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+			}
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static String getTenantRent(int id) {
+		String sql = "SELECT Monthly_Rent FROM tenant_info WHERE tenant_id = " + id;
+
+		try (Connection conn = MySQLJDBCUtil.getConnection(); Statement stmt = conn.createStatement();) {
+			ResultSet rs = stmt.executeQuery(sql);
+
+			while (rs.next()) {
+				String s = rs.getString("Monthly_Rent");
+				conn.close();
+				return s;
+			}
+
+			try {
+				rs.close();
+				stmt.close();
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+			}
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	public static ArrayList<String[]> getTenantBasicInfo() {
-		String sql = "SELECT tenant_id, name, address FROM tenant_info";
+		String sql = "SELECT tenant_id, name, address FROM tenant_info ORDER BY name";
 
 		try (Connection conn = MySQLJDBCUtil.getConnection(); Statement stmt = conn.createStatement();) {
 			ResultSet rs = stmt.executeQuery(sql);
@@ -243,9 +295,39 @@ public class SQLFunctions {
 		}
 		return null;
 	}
+	
+	public static ArrayList<String[]> getTenantReportInfo() {
+		String sql = "SELECT tenant_id, name, email, current_balance, address, phone, monthly_rent FROM tenant_info ORDER BY name";
+
+		try (Connection conn = MySQLJDBCUtil.getConnection(); Statement stmt = conn.createStatement();) {
+			ResultSet rs = stmt.executeQuery(sql);
+
+			ArrayList<String[]> table = new ArrayList<String[]>();
+
+			while (rs.next()) {
+				String[] array = { rs.getString("tenant_id"), rs.getString("name"), rs.getString("email"), rs.getString("current_balance"),
+						rs.getString("address"), rs.getString("phone"), rs.getString("monthly_rent") };
+				table.add(array);
+			}
+
+			try {
+				rs.close();
+				stmt.close();
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+			}
+			conn.close();
+
+			return table;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	public static ArrayList<String[]> getTenantBasicInfoAndBalance() {
-		String sql = "SELECT tenant_id, name, address, current_balance FROM tenant_info";
+		String sql = "SELECT tenant_id, name, address, current_balance FROM tenant_info ORDER BY name";
 
 		try (Connection conn = MySQLJDBCUtil.getConnection(); Statement stmt = conn.createStatement();) {
 			ResultSet rs = stmt.executeQuery(sql);
@@ -543,12 +625,12 @@ public class SQLFunctions {
 
 	public static void editTenant(String[] info) {
 		String sql = "UPDATE tenant_info SET name = '" + info[1] + "', address = '" + info[2] + "', citystate = '"
-				+ info[3] + "', zipcode = " + info[4] + ", email = '" + info[5] + "', current_balance = " + info[6]
-				+ ", monthly_rent = " + info[7] + ", security_deposit = " + info[8] + " WHERE tenant_id = " + info[0]
+				+ info[3] + "', zipcode = " + info[4] + ", email = '" + info[5] + "', phone = " + info[6] + ", current_balance = " + info[7]
+				+ ", monthly_rent = " + info[8] + ", security_deposit = " + info[9] + ", notes = '" + info[10] + "' WHERE tenant_id = " + info[0]
 				+ ";";
 
 		int oldBalance = getBalance(Integer.valueOf(info[0]));
-		int newBalance = Integer.valueOf(info[6]);
+		int newBalance = Integer.valueOf(info[7]);
 
 		try (Connection conn = MySQLJDBCUtil.getConnection(); Statement stmt = conn.createStatement();) {
 			stmt.executeUpdate(sql);
@@ -562,6 +644,19 @@ public class SQLFunctions {
 			newHistory(Integer.valueOf(info[0]), newBalance - oldBalance, "Manual Change", null);
 		}
 	}
+	
+	public static void changeTenantRent(int id, int rent) {
+		String sql = "UPDATE tenant_info SET monthly_rent = monthly_rent - " + rent + " WHERE tenant_id = " + id
+				+ ";";
+
+		try (Connection conn = MySQLJDBCUtil.getConnection(); Statement stmt = conn.createStatement();) {
+			stmt.executeUpdate(sql);
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	public static void editUnit(String[] info) {
 		String sql = "UPDATE unit_info SET unit_number = '" + info[1] + "', unit_type = '" + info[2]
@@ -572,11 +667,9 @@ public class SQLFunctions {
 		int unitNum = Integer.valueOf(info[0]);
 		int newPrice = Integer.valueOf(info[4]);
 		int oldPrice = getPrice(unitNum);
-		if (newPrice != oldPrice && getUnitTenant(unitNum) != null) {
+		if (newPrice != oldPrice && getUnitTenant(unitNum).length() != 0) {
 			int tenant = Integer.valueOf(getUnitTenant(unitNum));
-			String[] tInfo = getTenantInfo(tenant);
-			tInfo[7] = String.valueOf(Integer.valueOf(tInfo[7]) - (oldPrice - newPrice));
-			editTenant(tInfo);
+			changeTenantRent(tenant, oldPrice - newPrice);
 		}
 		try (Connection conn = MySQLJDBCUtil.getConnection(); Statement stmt = conn.createStatement();) {
 			stmt.executeUpdate(sql);
@@ -831,6 +924,23 @@ public class SQLFunctions {
 			}
 
 			newHistory(ids.get(i), rents.get(i), "Monthly Rent", null);
+		}
+	}
+	
+	public static void bill(ArrayList<Integer> tenants) {
+		for (int i = 0; i < tenants.size(); i++) {
+			String sql = "UPDATE tenant_info SET current_balance = current_balance + Monthly_Rent WHERE tenant_id = "
+					+ tenants.get(i) + ";";
+
+			try (Connection conn = MySQLJDBCUtil.getConnection(); Statement stmt = conn.createStatement();) {
+				stmt.executeUpdate(sql);
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			newHistory(tenants.get(i), Integer.parseInt(getTenantRent(tenants.get(i))), "Monthly Rent", null);
 		}
 	}
 

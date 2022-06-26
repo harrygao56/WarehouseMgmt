@@ -21,6 +21,7 @@ public class GUI extends JFrame {
 	private JLabel manageTenants;
 	private JLabel manageUnits;
 	private JLabel billing;
+	private JLabel report;
 	private JLabel title;
 	private JLabel icon;
 
@@ -134,6 +135,35 @@ public class GUI extends JFrame {
 			}
 		});
 
+		// Creating and configuring "View Report" button
+		report = new JLabel("View Report", SwingConstants.CENTER);
+		report.setFont(new Font("Trebuchet MS", Font.PLAIN, 20));
+		report.setOpaque(true);
+		report.setBackground(Color.cyan);
+		report.setPreferredSize(new Dimension(200, 40));
+		report.setForeground(Color.gray);
+		// Creating border
+		border = BorderFactory.createLineBorder(Color.gray);
+		report.setBorder(border);
+		report.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(final MouseEvent mevt) {
+				report.setBackground(Color.cyan);
+				report.setForeground(Color.gray);
+				openReport();
+			}
+
+			public void mouseEntered(MouseEvent e) {
+				report.setBackground(Color.white);
+				report.setForeground(Color.cyan);
+			}
+
+			public void mouseExited(MouseEvent e) {
+				report.setBackground(Color.cyan);
+				report.setForeground(Color.gray);
+			}
+		});
+
 		// Creating blank filler labels
 		JLabel blank = new JLabel();
 		blank.setPreferredSize(new Dimension(200, 10));
@@ -143,6 +173,8 @@ public class GUI extends JFrame {
 		blank2.setPreferredSize(new Dimension(200, 20));
 		JLabel blank3 = new JLabel();
 		blank3.setPreferredSize(new Dimension(200, 20));
+		JLabel blank4 = new JLabel();
+		blank4.setPreferredSize(new Dimension(200, 20));
 
 		gbc.gridx = 1;
 		gbc.gridy = 1;
@@ -179,10 +211,18 @@ public class GUI extends JFrame {
 		gbc.gridx = 1;
 		gbc.gridy = 9;
 		menu.add(billing, gbc);
+		
+		gbc.gridx = 1;
+		gbc.gridy = 10;
+		menu.add(blank4, gbc);
+		
+		gbc.gridx = 1;
+		gbc.gridy = 11;
+		menu.add(report, gbc);
 
 		add(menu);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(820, 600);
+		setSize(1250, 800);
 		setResizable(false);
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -204,6 +244,10 @@ public class GUI extends JFrame {
 		remove(menu);
 		BillingManager bM = new BillingManager(this);
 		bM.display();
+	}
+	
+	public void openReport() {
+		Report r = new Report();
 	}
 
 	public JPanel getMenu() {

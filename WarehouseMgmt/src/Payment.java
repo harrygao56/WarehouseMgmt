@@ -36,9 +36,9 @@ public class Payment extends JPanel {
 		title.setFont(new Font("Trebuchet MS", Font.BOLD, 22));
 		title.setPreferredSize(new Dimension(300, 24));
 
-		JLabel amt = new JLabel("Payment Amount:", SwingConstants.CENTER);
+		JLabel amt = new JLabel("Payment Amount ($):", SwingConstants.CENTER);
 		amt.setFont(new Font("Trebuchet MS", Font.PLAIN, 18));
-		amt.setPreferredSize(new Dimension(170, 20));
+		amt.setPreferredSize(new Dimension(200, 20));
 
 		field = new JTextField();
 		field.setPreferredSize(new Dimension(120, 25));

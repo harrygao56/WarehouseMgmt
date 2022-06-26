@@ -68,7 +68,7 @@ class Mail {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(new JFrame(), "Error sending email");
+			JOptionPane.showMessageDialog(new JFrame(), "Error sending email to " + recipient);
 		}
 	}
 	

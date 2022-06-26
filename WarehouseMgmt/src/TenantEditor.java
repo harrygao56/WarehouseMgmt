@@ -20,8 +20,8 @@ import javax.swing.SwingConstants;
 public class TenantEditor extends JFrame {
 	private JPanel panel;
 	private JTextField[] fields;
-	private String[] labels = { "Name", "Address", "City/State", "Zipcode", "Email", "Current Balance", "Monthly Rent",
-			"Security Deposit" };
+	private String[] labels = { "Name", "Address", "City/State", "Zipcode", "Email", "Phone", "Current Balance ($)", "Monthly Rent ($)",
+			"Security Deposit", "Notes"};
 	private int id;
 	private TenantSearch tSearch;
 
@@ -75,12 +75,12 @@ public class TenantEditor extends JFrame {
 			fields[curr].setPreferredSize(new Dimension(200, 20));
 			
 			// Making Zipcode, Current Balance, and Security deposit explusive to ints
-			if (labels[curr].equals("Zipcode") || labels[curr].equals("Current Balance")
-					|| labels[curr].equals("Security Deposit")) {
+			if (labels[curr].equals("Zipcode") || labels[curr].equals("Current Balance ($)")
+					|| labels[curr].equals("Security Deposit") || labels[curr].equals("Phone")) {
 				// Making the text field exclusive to numbers
 				fields[curr].addKeyListener(new KeyAdapter() {
 					public void keyPressed(KeyEvent ke) {
-						if ((ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') || ke.getKeyChar() == '\u0008') {
+						if ((ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') || ke.getKeyChar() == '\u0008' || ke.getKeyChar() == '-') {
 							fields[curr].setEditable(true);
 						} else {
 							fields[curr].setEditable(false);
@@ -90,7 +90,7 @@ public class TenantEditor extends JFrame {
 			}
 			
 			// Make Monthly Rent uneditable
-			if (labels[curr].equals("Monthly Rent")) {
+			if (labels[curr].equals("Monthly Rent ($)")) {
 				fields[curr].setEditable(false);
 			}
 			
@@ -163,7 +163,7 @@ public class TenantEditor extends JFrame {
 		
 		add(panel);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setSize(600, 400);
+		setSize(600, 500);
 		setLocationRelativeTo(null);
 		setVisible(true);
 		title.setPreferredSize(new Dimension(200, 24));
@@ -171,7 +171,7 @@ public class TenantEditor extends JFrame {
 	}
 	
 	public void update() {
-		String[] entries = new String[9];
+		String[] entries = new String[11];
 		entries[0] = String.valueOf(id);
 		for (int i = 0; i < fields.length; i++) {
 			if (fields[i].getText().equals("")) {

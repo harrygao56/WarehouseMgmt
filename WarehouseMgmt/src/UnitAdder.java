@@ -60,7 +60,7 @@ public class UnitAdder extends JFrame {
 		// Make exlusive to ints
 		fields[2] = new JFormattedTextField();
 		fields[2].setPreferredSize(new Dimension(140, 30));
-		descriptions[2] = "Unit Price";
+		descriptions[2] = "Unit Price ($)";
 		fields[2].addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent ke) {
 				if ((ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') || ke.getKeyChar() == '\u0008') {
