@@ -20,7 +20,7 @@ import javax.swing.SwingConstants;
 public class UnitEditor extends JFrame {
 	private JPanel panel;
 	private JTextField[] fields;
-	private String[] labels = {"Unit Number", "Unit Type", "Unit Size", "Unit Price"};
+	private String[] labels = {"Unit Number", "Unit Type", "Unit Size", "Unit Price ($)"};
 	private int num;
 	private UnitSearch uSearch;
 
@@ -73,7 +73,7 @@ public class UnitEditor extends JFrame {
 			fields[i].setPreferredSize(new Dimension(200, 20));
 			
 			// Making Unit Number and Unit price explusive to ints
-			if (labels[i].equals("Unit Number") || labels[i].equals("Unit Price")) {
+			if (labels[i].equals("Unit Number") || labels[i].equals("Unit Price ($)")) {
 				// Making the text field exclusive to numbers
 				int curr = i;
 				fields[i].addKeyListener(new KeyAdapter() {

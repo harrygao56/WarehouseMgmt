@@ -84,10 +84,10 @@ public class TenantAdder extends JFrame {
 		
 		fields[6] = new JTextField();
 		fields[6].setPreferredSize(new Dimension(140, 30));
-		descriptions[6] = "Current Balance";
+		descriptions[6] = "Current Balance ($)";
 		fields[6].addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent ke) {
-				if ((ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') || ke.getKeyChar() == '\u0008') {
+				if ((ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') || ke.getKeyChar() == '\u0008' || ke.getKeyChar() == '-') {
 					fields[6].setEditable(true);
 				} else {
 					fields[6].setEditable(false);
@@ -98,10 +98,10 @@ public class TenantAdder extends JFrame {
 		
 		fields[7] = new JTextField();
 		fields[7].setPreferredSize(new Dimension(140, 30));
-		descriptions[7] = "Security Deposit";
+		descriptions[7] = "Security Deposit ($)";
 		fields[7].addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent ke) {
-				if ((ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') || ke.getKeyChar() == '\u0008') {
+				if ((ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') || ke.getKeyChar() == '\u0008' || ke.getKeyChar() == '-') {
 					fields[7].setEditable(true);
 				} else {
 					fields[7].setEditable(false);
@@ -122,7 +122,7 @@ public class TenantAdder extends JFrame {
 			gbc.ipadx = 30;
 
 			JLabel label = new JLabel(descriptions[i], SwingConstants.LEFT);
-			label.setFont(new Font("Trebuchet MS", Font.PLAIN, 20));
+			label.setFont(new Font("Trebuchet MS", Font.PLAIN, 18));
 			label.setBackground(Color.white);
 
 			panel.add(label, gbc);
@@ -206,7 +206,7 @@ public class TenantAdder extends JFrame {
 	public void add() {
 		SQLFunctions.insertTenant(fields[0].getText(), fields[1].getText(), 
 				fields[2].getText(), Integer.parseInt(fields[3].getText()), 
-				fields[4].getText(), Integer.parseInt(fields[5].getText()), 
+				fields[4].getText(), Long.parseLong(fields[5].getText()), 
 				Integer.parseInt(fields[6]. getText()), Integer.parseInt(fields[7]. getText()),
 				fields[8].getText());
 		setVisible(false);

@@ -1,15 +1,22 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
@@ -30,7 +37,7 @@ public class TenantHistory extends JPanel {
 		panel.setLayout(new GridBagLayout());
 
 		pane = new JScrollPane(panel);
-		pane.setPreferredSize(new Dimension(775, 450));
+		pane.setPreferredSize(new Dimension(1200, 600));
 
 		JLabel title = new JLabel("Payment History for " + SQLFunctions.getName(tenant), SwingConstants.LEFT);
 		title.setFont(new Font("Trebuchet MS", Font.BOLD, 20));
@@ -66,6 +73,43 @@ public class TenantHistory extends JPanel {
 			}
 		});
 
+		// Initialize Download Button
+		JLabel download = new JLabel("Download", SwingConstants.CENTER);
+		download.setFont(new Font("Trebuchet MS", Font.PLAIN, 20));
+		download.setOpaque(true);
+		download.setBackground(Color.cyan);
+		download.setPreferredSize(new Dimension(105, 35));
+		download.setForeground(Color.gray);
+		// Creating border
+		download.setBorder(BorderFactory.createLineBorder(Color.gray));
+		download.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(final MouseEvent mevt) {
+				BufferedImage image = new BufferedImage(panel.getWidth(), panel.getHeight(),
+						BufferedImage.TYPE_INT_ARGB);
+				Graphics g = image.getGraphics();
+				panel.paint(g);
+				try {
+					String home = System.getProperty("user.home");
+					ImageIO.write(image, "png", new File(home + "\\Downloads\\history_" + tenant + ".png"));
+					JOptionPane.showMessageDialog(new JFrame(), "File Saved to Downloads Folder");
+				} catch (IOException e) {
+					JOptionPane.showMessageDialog(new JFrame(), "Error Downloading File");
+					System.out.println(e.getMessage());
+				}
+			}
+
+			public void mouseEntered(MouseEvent e) {
+				download.setBackground(Color.white);
+				download.setForeground(Color.cyan);
+			}
+
+			public void mouseExited(MouseEvent e) {
+				download.setBackground(Color.cyan);
+				download.setForeground(Color.gray);
+			}
+		});
+
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.WEST;
@@ -73,14 +117,21 @@ public class TenantHistory extends JPanel {
 
 		gbc.gridx = 0;
 		gbc.gridy = 1;
+		gbc.gridwidth = 2;
 		gbc.anchor = GridBagConstraints.WEST;
 		add(pane, gbc);
-		
+
 		gbc.gridx = 0;
 		gbc.gridy = 2;
 		gbc.ipady = 4;
 		gbc.anchor = GridBagConstraints.WEST;
 		add(cancel, gbc);
+
+		gbc.gridx = 1;
+		gbc.gridy = 2;
+		gbc.ipady = 4;
+		gbc.anchor = GridBagConstraints.EAST;
+		add(download, gbc);
 
 		// Creating first row of column labels
 		String[] cLabels = { "Date", "New Balance", "Transaction", "Type", "Description" };

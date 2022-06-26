@@ -95,7 +95,7 @@ public abstract class Search extends JPanel {
 		panel.setBackground(Color.white);
 
 		pane = new JScrollPane(panel);
-		pane.setPreferredSize(new Dimension(775, 450));
+		pane.setPreferredSize(new Dimension(1220, 550));
 
 		gbc.gridx = 0;
 		gbc.gridy = 0;
