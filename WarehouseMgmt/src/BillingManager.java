@@ -47,60 +47,9 @@ public class BillingManager extends Manager {
 		bill.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(final MouseEvent mevt) {
-				int input = JOptionPane.showConfirmDialog(null, "Do you want to bill all tenants?", null,
-						JOptionPane.YES_NO_OPTION);
-				System.out.println(input);
-				if (input == 0) {
-					SQLFunctions.billAll();
-
-					ArrayList<String[]> table = SQLFunctions.getTenantStatementInfo();
-					for (String[] row : table) {
-
-						try (FileInputStream f = new FileInputStream("db.properties")) {
-
-							// load the properties file
-							Properties pros = new Properties();
-							pros.load(f);
-
-							// assign db parameters
-							String name = pros.getProperty("company_name");
-							String street = pros.getProperty("company_staddress");
-							String city = pros.getProperty("company_citystatezip");
-							
-							String m1 = name + "\n" + street + "\n" + city + "\n\nTenant:          "
-									+ row[0] + "\nEmail:           " + row[1] + "\nAddress:         " + row[3]
-									+ "\nMonthly Rent:    $" + row[4] + "\nBalance Due:     $" + row[2]
-									+ "\nPrior Balance:   $" + (Integer.valueOf(row[2]) - Integer.valueOf(row[4]));
-							Calendar cal = GregorianCalendar.getInstance();
-							SimpleDateFormat df = new SimpleDateFormat("MMMM");
-
-							Date currentMonth = new Date();
-							cal.setTime(currentMonth);
-
-							// Add next month
-							cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1);
-							String nextString = df.format(cal.getTime());
-
-							String m2 = "\n\nDear " + row[0]
-									+ ",\n\nThank you for your business. This is your invoice for the month of "
-									+ nextString
-									+ ". Please submit payment prior to the due date to avoid fees. A copy of your statement is attached.\n\nThank you,\n" + name;
-
-							String message = m1.concat(m2);
-							try {
-								Mail.send(row[1], "INVOICE FOR " + nextString, message, HistoryFile.createFile(Integer.valueOf(row[5])), "history.txt");
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						} catch (IOException e) {
-							System.out.println(e.getMessage());
-						}
-					}
-
-					JOptionPane.showMessageDialog(new JFrame(), "Billing successful");
-				}
-				returnToMenu();
+				gui.remove(panel);
+				BillReport b = new BillReport(gui);
+				b.display();
 			}
 
 			public void mouseEntered(MouseEvent e) {
