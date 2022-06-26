@@ -20,7 +20,7 @@ import javax.swing.SwingConstants;
 public class TenantEditor extends JFrame {
 	private JPanel panel;
 	private JTextField[] fields;
-	private String[] labels = { "Name", "Address", "City/State", "Zipcode", "Email", "Phone", "Current Balance", "Monthly Rent",
+	private String[] labels = { "Name", "Address", "City/State", "Zipcode", "Email", "Phone", "Current Balance ($)", "Monthly Rent ($)",
 			"Security Deposit", "Notes"};
 	private int id;
 	private TenantSearch tSearch;
@@ -75,12 +75,12 @@ public class TenantEditor extends JFrame {
 			fields[curr].setPreferredSize(new Dimension(200, 20));
 			
 			// Making Zipcode, Current Balance, and Security deposit explusive to ints
-			if (labels[curr].equals("Zipcode") || labels[curr].equals("Current Balance")
+			if (labels[curr].equals("Zipcode") || labels[curr].equals("Current Balance ($)")
 					|| labels[curr].equals("Security Deposit") || labels[curr].equals("Phone")) {
 				// Making the text field exclusive to numbers
 				fields[curr].addKeyListener(new KeyAdapter() {
 					public void keyPressed(KeyEvent ke) {
-						if ((ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') || ke.getKeyChar() == '\u0008') {
+						if ((ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') || ke.getKeyChar() == '\u0008' || ke.getKeyChar() == '-') {
 							fields[curr].setEditable(true);
 						} else {
 							fields[curr].setEditable(false);
@@ -90,7 +90,7 @@ public class TenantEditor extends JFrame {
 			}
 			
 			// Make Monthly Rent uneditable
-			if (labels[curr].equals("Monthly Rent")) {
+			if (labels[curr].equals("Monthly Rent ($)")) {
 				fields[curr].setEditable(false);
 			}
 			
