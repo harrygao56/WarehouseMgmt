@@ -53,8 +53,18 @@ public class BillReport extends JPanel {
 
 		panel = new JPanel();
 		panel.setBackground(Color.white);
+		
+		Calendar cal = GregorianCalendar.getInstance();
+		SimpleDateFormat df = new SimpleDateFormat("MMMM");
 
-		label = new JLabel("Select Tenants to Bill", SwingConstants.CENTER);
+		Date currentMonth = new Date();
+		cal.setTime(currentMonth);
+
+		// Add next month
+		cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1);
+		String nextString = df.format(cal.getTime());
+
+		label = new JLabel("Select Tenants to Bill for " + nextString, SwingConstants.CENTER);
 		label.setFont(new Font("Trebuchet MS Bold", Font.PLAIN, 20));
 
 		// Create Select All Button

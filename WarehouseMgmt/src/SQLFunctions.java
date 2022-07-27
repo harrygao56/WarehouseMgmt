@@ -408,9 +408,9 @@ public class SQLFunctions {
 	}
 
 	public static ArrayList<String[]> getTenantBasicInfo(String term) {
-		String sql1 = "SELECT tenant_id, name, address FROM tenant_info WHERE name LIKE '" + term + "'";
-		String sql2 = "SELECT tenant_id, name, address FROM tenant_info WHERE address LIKE '" + term + "'";
-		String sql3 = "SELECT tenant_id, name, address FROM tenant_info WHERE tenant_id LIKE '" + term + "'";
+		String sql1 = "SELECT tenant_id, name, address FROM tenant_info WHERE name LIKE '%" + term + "%'";
+		String sql2 = "SELECT tenant_id, name, address FROM tenant_info WHERE address LIKE '%" + term + "%'";
+		String sql3 = "SELECT tenant_id, name, address FROM tenant_info WHERE tenant_id LIKE '%" + term + "%'";
 
 		try (Connection conn = MySQLJDBCUtil.getConnection(); Statement stmt = conn.createStatement();) {
 			ArrayList<String[]> table = new ArrayList<String[]>();
@@ -479,21 +479,72 @@ public class SQLFunctions {
 		}
 		return null;
 	}
+	
+	public static ArrayList<String> getTenantUnits(int id) {
+		String sql = "SELECT Unit_Number FROM unit_info WHERE tenant = " + id;
+		
+		try (Connection conn = MySQLJDBCUtil.getConnection(); Statement stmt = conn.createStatement();) {
+			ResultSet rs = stmt.executeQuery(sql);
+
+			ArrayList<String> cols = new ArrayList<String>();
+
+			while (rs.next()) {
+				cols.add(rs.getString(1));
+			}
+
+			try {
+				rs.close();
+				stmt.close();
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+			}
+			conn.close();
+
+			return cols;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	public static ArrayList<String[]> getUnitInfo(String term) {
-		String sql1 = "SELECT * FROM unit_info WHERE tenant = '" + term + "';";
-		String sql2 = "SELECT * FROM unit_info WHERE unit_number = '" + term + "';";
-		String sql3 = "SELECT * FROM unit_info WHERE unit_type = '" + term + "';";
-		String sql4 = "SELECT * FROM unit_info WHERE unit_size = '" + term + "';";
+		String sql1 = "SELECT tenant_id FROM tenant_info WHERE name LIKE '%" + term + "%'";
+		String sql2 = "SELECT * FROM unit_info WHERE unit_number = '" + term + "'";
+		String sql3 = "SELECT * FROM unit_info WHERE unit_type = '" + term + "'";
+		String sql4 = "SELECT * FROM unit_info WHERE unit_size = '" + term + "'";
 
 		try (Connection conn = MySQLJDBCUtil.getConnection(); Statement stmt = conn.createStatement();) {
 			ArrayList<String[]> table = new ArrayList<String[]>();
 			ResultSet rs = stmt.executeQuery(sql1);
+			
+			ArrayList<Integer> ids = new ArrayList<Integer>();
 
 			while (rs.next()) {
-				String[] array = { rs.getString("Unit_Number"), rs.getString("Unit_Type"), rs.getString("Unit_Price"),
-						rs.getString("Unit_Size"), rs.getString("Tenant") };
-				table.add(array);
+				ids.add(rs.getInt("tenant_id"));
+			}
+			
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+			}
+			
+			for (int i = 0; i < ids.size(); i++) {
+				String temp_sql = "SELECT * FROM unit_info WHERE tenant = '" + ids.get(i) + "'";
+				ResultSet temp_rs = stmt.executeQuery(temp_sql);
+				
+				while(temp_rs.next()) {
+					String[] array = { temp_rs.getString("Unit_Number"), temp_rs.getString("Unit_Type"), temp_rs.getString("Unit_Price"),
+							temp_rs.getString("Unit_Size"), temp_rs.getString("Tenant") };
+					table.add(array);
+				}
+				
+				try {
+					temp_rs.close();
+				} catch (SQLException e) {
+					System.out.println(e.getMessage());
+				}
 			}
 
 			rs = stmt.executeQuery(sql2);
@@ -667,7 +718,7 @@ public class SQLFunctions {
 		int unitNum = Integer.valueOf(info[0]);
 		int newPrice = Integer.valueOf(info[4]);
 		int oldPrice = getPrice(unitNum);
-		if (newPrice != oldPrice && getUnitTenant(unitNum).length() != 0) {
+		if (newPrice != oldPrice && getUnitTenant(unitNum) != null) {
 			int tenant = Integer.valueOf(getUnitTenant(unitNum));
 			changeTenantRent(tenant, oldPrice - newPrice);
 		}
