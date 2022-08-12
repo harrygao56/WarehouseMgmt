@@ -1,4 +1,7 @@
 Date      New Balance   Transaction   Type      Desc.
-2022-06-25     50     50     Monthly Rent              
-2022-06-25     100     50     Monthly Rent              
-2022-06-25     150     50     Monthly Rent              
+2022-06-25     200     200     Monthly Rent              
+2022-06-25     400     200     Monthly Rent              
+2022-06-25     0     -400     Payment     Cash     
+2022-08-12     0     0     Monthly Rent              
+2022-08-12     0     0     Monthly Rent              
+2022-08-12     0     0     Monthly Rent              

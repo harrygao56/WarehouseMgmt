@@ -192,10 +192,13 @@ public class BillReport extends JPanel {
 								String street = pros.getProperty("company_staddress");
 								String city = pros.getProperty("company_citystatezip");
 
-								String m1 = name + "\n" + street + "\n" + city + "\n\nTenant:          " + row[0]
+								String m1 = name + "\n" + street + "\n" + city + "\n\n--------------------------------------------------------------------------" 
+								+ "\n\nTenant:          " + row[0]
 										+ "\nEmail:           " + row[1] + "\nAddress:         " + row[3]
 										+ "\nMonthly Rent:    $" + row[4] + "\nBalance Due:     $" + row[2]
-										+ "\nPrior Balance:   $" + (Integer.valueOf(row[2]) - Integer.valueOf(row[4]));
+										+ "\nPrior Balance:   $" + (Integer.valueOf(row[2]) - Integer.valueOf(row[4])) + "\n\n--------------------------------------------------------------------------";
+								
+								
 								Calendar cal = GregorianCalendar.getInstance();
 								SimpleDateFormat df = new SimpleDateFormat("MMMM");
 

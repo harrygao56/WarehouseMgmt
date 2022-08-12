@@ -149,7 +149,6 @@ public class LateFee extends JPanel {
 				SQLFunctions.newHistory(tenant, val, "Late Fee", null);
 			}
 		}
-		
 		goBack();
 		JOptionPane.showMessageDialog(new JFrame(),
 				"Fees applied successfully.");

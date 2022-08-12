@@ -8,6 +8,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Properties;
+
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -161,18 +168,44 @@ public class Payment extends JPanel {
 		SQLFunctions.applyPayment(tenant, amt);
 		SQLFunctions.newHistory(tenant, -amt, "Payment", type.getText());
 
-		try {
-			Mail.sendReceipt(SQLFunctions.getEmail(tenant), "Payment Received",
-					"Your payment of $" + amt + " was received. Updated Balance: $" + SQLFunctions.getBalance(tenant)
-							+ "\n\nThank you, and have a nice day,\nA Best Self Storage");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		try (FileInputStream f = new FileInputStream("db.properties")) {
 
-		goBack();
-		JOptionPane.showMessageDialog(new JFrame(),
-				"Payment successfully applied. Updated Balance: " + SQLFunctions.getBalance(tenant));
+			// load the properties file
+			Properties pros = new Properties();
+			pros.load(f);
+
+			// assign db parameters
+			String name = pros.getProperty("company_name");
+			String street = pros.getProperty("company_staddress");
+			String city = pros.getProperty("company_citystatezip");
+			
+			Calendar cal = GregorianCalendar.getInstance();
+			SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+			String nextString = df.format(cal.getTime());
+
+			String m1 = name + "\n" + street + "\n" + city
+					+ "\n\n--------------------------------------------------------------------------"
+					+ "\n\nTenant:          " + SQLFunctions.getName(tenant) + "\nEmail:           "
+					+ SQLFunctions.getEmail(tenant) + "\nDate:            " + nextString + "\nRent:            $" + SQLFunctions.getMonthlyRent(tenant)
+					+ "\n\n--------------------------------------------------------------------------\n\n";
+
+			try {
+				Mail.sendReceipt(SQLFunctions.getEmail(tenant), "Payment Received",
+						m1 + "Your payment of $" + amt + " was received. Updated Balance: $"
+								+ SQLFunctions.getBalance(tenant)
+								+ "\n\nThank you, and have a nice day,\nA Best Self Storage");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			goBack();
+			JOptionPane.showMessageDialog(new JFrame(),
+					"Payment successfully applied. Updated Balance: " + SQLFunctions.getBalance(tenant));
+		}
+		catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	public void goBack() {
