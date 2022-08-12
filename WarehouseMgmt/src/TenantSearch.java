@@ -28,7 +28,7 @@ public class TenantSearch extends Search {
 		panel.setLayout(new GridBagLayout());
 
 		// creating first row of column labels
-		String[] cLabels = { "ID", "Name", "Address" };
+		String[] cLabels = { "ID", "Name", "Address", "Units" };
 
 		for (int i = 0; i < cLabels.length; i++) {
 			JLabel label = new JLabel(cLabels[i], SwingConstants.CENTER);
@@ -56,6 +56,26 @@ public class TenantSearch extends Search {
 				gbc.insets = new Insets(4, 0, 4, 0);
 				panel.add(label, gbc);
 			}
+		}
+		
+		// Creating Unit Labels
+		
+		for (int i = 0; i < table.size(); ++i) {
+			ArrayList<String> units = SQLFunctions.getTenantUnits(Integer.parseInt(table.get(i)[0]));
+			String appended = "";
+			for (int j = 0; j < units.size(); ++j) {
+				if (j != 0) appended += ",";
+				appended += units.get(j);
+			}
+			JLabel label = new JLabel(appended);
+			label.setFont(new Font("Trebuchet MS", Font.PLAIN, 14));
+			label.setOpaque(true);
+			label.setBackground(Color.white);
+
+			gbc.gridx = 3;
+			gbc.gridy = i + 1;
+			gbc.insets = new Insets(4, 0, 4, 0);
+			panel.add(label, gbc);
 		}
 
 		// Creating Edit and Payment History buttons
@@ -85,7 +105,7 @@ public class TenantSearch extends Search {
 				}
 			});
 
-			gbc.gridx = 3;
+			gbc.gridx = 4;
 			gbc.gridy = i + 1;
 			// gbc.anchor = GridBagConstraints.WEST;
 			gbc.insets = new Insets(4, 20, 4, 20);
@@ -116,7 +136,7 @@ public class TenantSearch extends Search {
 				}
 			});
 
-			gbc.gridx = 4;
+			gbc.gridx = 5;
 			gbc.gridy = i + 1;
 			// gbc.anchor = GridBagConstraints.WEST;
 			gbc.insets = new Insets(4, 20, 4, 20);

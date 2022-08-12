@@ -36,7 +36,7 @@ public class GUI extends JFrame {
 		menu.setLayout(grid);
 
 		// Creating Title Label
-		title = new JLabel("Warehouse Manger", SwingConstants.CENTER);
+		title = new JLabel("Warehouse Manager", SwingConstants.CENTER);
 		title.setFont(new Font("Trebuchet MS", Font.PLAIN, 40));
 		title.setOpaque(true);
 		title.setBackground(Color.white);
@@ -222,7 +222,7 @@ public class GUI extends JFrame {
 
 		add(menu);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(1250, 800);
+		setSize(1300, 800);
 		setResizable(false);
 		setLocationRelativeTo(null);
 		setVisible(true);

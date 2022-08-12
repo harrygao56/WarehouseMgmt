@@ -34,12 +34,12 @@ public class Report extends JFrame {
 		loadPanel();
 
 		pane = new JScrollPane(panel);
-		pane.setPreferredSize(new Dimension(1000, 550));
+		pane.setPreferredSize(new Dimension(1350, 700));
 		
 		add(pane);
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setSize(1200, 600);
+		setSize(1400, 750);
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
@@ -51,7 +51,7 @@ public class Report extends JFrame {
 		ArrayList<String[]> table = SQLFunctions.getTenantReportInfo();
 		
 		// creating first row of column labels
-		String[] cLabels = { "Name", "Email", "Owed ($)", "Address", "Phone", "Rent ($)" };
+		String[] cLabels = { "Name", "Email", "Owed ($)", "Address", "Phone", "Rent ($)" , "Units"};
 		
 		for (int i = 0; i < cLabels.length; i++) {
 			JLabel label = new JLabel(cLabels[i], SwingConstants.CENTER);
@@ -94,6 +94,24 @@ public class Report extends JFrame {
 				gbc.insets = new Insets(4, 0, 4, 0);
 				panel.add(label, gbc);
 			}
+		}
+		
+		for (int i = 0; i < table.size(); ++i) {
+			ArrayList<String> units = SQLFunctions.getTenantUnits(Integer.parseInt(table.get(i)[0]));
+			String appended = "";
+			for (int j = 0; j < units.size(); ++j) {
+				if (j != 0) appended += ",";
+				appended += units.get(j);
+			}
+			JLabel label = new JLabel(appended);
+			label.setFont(new Font("Trebuchet MS", Font.PLAIN, 14));
+			label.setOpaque(true);
+			label.setBackground(Color.white);
+
+			gbc.gridx = 6;
+			gbc.gridy = i + 1;
+			gbc.insets = new Insets(4, 0, 4, 0);
+			panel.add(label, gbc);
 		}
 	}
 }
